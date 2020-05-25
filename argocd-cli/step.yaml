@@ -3,7 +3,7 @@ kind: step-type
 metadata:
   name: razielt77_github/argocd-cli
   version: 0.0.1
-  isPublic: false
+  isPublic: true
   description: This pipeline plugin trigger a sync for ArgoCD app
   sources:
     - 'https://github.com/Razielt77/codefresh-steps/tree/master/argocd-cli'
@@ -13,7 +13,7 @@ metadata:
   icon:
     type: svg
     url: https://raw.githubusercontent.com/Razielt77/codefresh-steps/master/argocd-cli/argo.svg
-    background: "#f4f4f4"
+    background: "#18b99a"
   maintainers:
     - name: Raziel Tabib
   examples:
@@ -63,8 +63,8 @@ spec:
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "gcr.io/demochat101/argocd-cli:1.0"
+      image: "docker.io/razielt/argocd-cli:1.0"
       commands:
-        - "argocd login $ARGOCD_SERVER --insecure --username $ARGOCD_USERNAME --password $ARGOCD_PWD"
-        - "argocd app sync $ARGOCD_APP_NAME"
-        - "argocd app wait $ARGOCD_APP_NAME"
+        - "argocd login ${{ARGOCD_SERVER}} --insecure --username ${{ARGOCD_USERNAME}} --password ${{ARGOCD_PWD}}"
+        - "argocd app sync ${{ARGOCD_APP_NAME}}"
+        - "argocd app wait ${{ARGOCD_APP_NAME}}"
