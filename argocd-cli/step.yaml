@@ -13,7 +13,7 @@ metadata:
   icon:
     type: svg
     url: https://raw.githubusercontent.com/Razielt77/codefresh-steps/master/argocd-cli/argo.svg
-    background: "#18b99a"
+    background: "#f4f4f4"
   maintainers:
     - name: Raziel Tabib
   examples:
