@@ -57,14 +57,23 @@ spec:
           "ARGOCD_APP_NAME": {
               "type": "string",
               "description": "The argocd application that will be synced"
+          },
+          "ARGOCD_SYNC": {
+              "type": "string",
+              "description": "Specify whether to trigger an ArgoCD sync"
+              "default": "TRUE"
+          },
+          "ARGOCD_WAIT": {
+              "type": "string",
+              "description": "Specify whether to wait for ArgoCD server (when doing canary this might wait till the whole rollout is complete)",
+              "default": "TRUE"
           }
       }
     }
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "docker.io/razielt/argocd-cli:1.0"
+      image: "docker.io/razielt/argocd-cli:2.0"
       commands:
         - "argocd login ${{ARGOCD_SERVER}} --insecure --username ${{ARGOCD_USERNAME}} --password ${{ARGOCD_PWD}}"
-        - "argocd app sync ${{ARGOCD_APP_NAME}}"
-        - "argocd app wait ${{ARGOCD_APP_NAME}}"
+        - "run_argo"

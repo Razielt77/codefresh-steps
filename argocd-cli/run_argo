@@ -1,0 +1,8 @@
+if [ "$ARGOCD_SYNC" == "TRUE" ]; then
+        echo "synch..."
+        argocd app sync ${{ARGOCD_APP_NAME}}
+fi
+if [ "$ARGOCD_WAIT" == "TRUE" ]; then
+        echo "waiting..."
+        argocd app wait ${{ARGOCD_APP_NAME}}
+fi
