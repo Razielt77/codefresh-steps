@@ -60,7 +60,7 @@ spec:
           },
           "ARGOCD_SYNC": {
               "type": "string",
-              "description": "Specify whether to trigger an ArgoCD sync"
+              "description": "Specify whether to trigger an ArgoCD sync",
               "default": "TRUE"
           },
           "ARGOCD_WAIT": {
