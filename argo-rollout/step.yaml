@@ -1,0 +1,58 @@
+version: '1.0'
+kind: step-type
+metadata:
+  name: razielt77_github/argocd-rollout
+  version: 0.0.1
+  isPublic: true
+  description: This pipeline plugin can promote Argo rollouts
+  sources:
+    - 'https://github.com/Razielt77/codefresh-steps/tree/master/argo-rollout'
+  stage: incubating
+  categories:
+    - deployment
+  icon:
+    type: svg
+    url: https://raw.githubusercontent.com/Razielt77/codefresh-steps/master/argocd-cli/argo.svg
+    background: "#f4f4f4"
+  maintainers:
+    - name: Raziel Tabib
+  examples:
+    - workflow:
+        promote_rollout:
+          title: "Promote Argo rollout"
+          type: razielt77_github/argocd-rollout
+          arguments:
+            K8S_CONTEXT: '${{K8S_CONTEXT}}'
+            ROLLOUT_NAME: '${{ROLLOUT_NAME}}'
+  latest: true
+spec:
+  arguments: |
+    {
+      "definitions": {},
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "type": "object",
+      "additionalProperties": false,
+      "patterns": [],
+      "required": [
+          "K8S_CONTEXT",
+          "ROLLOUT_NAME"
+      ],
+      "properties": {
+          "K8S_CONTEXT": {
+              "type": "string",
+              "description": "The k8s context name as it show in the k8s integration."
+          },
+          "ROLLOUT_NAME": {
+              "type": "string",
+              "description": "The name of the rollout to be promoted."
+          }
+      }
+    }
+  steps:
+    runArgoCd:
+      title: "Run ArgoCD"
+      image: "razielt/argo-rollout:1.0"
+      commands:
+        - kubectl config get-contexts
+        - kubectl config use-context ${{K8S_CONTEXT}}
+        - kubectl argo rollouts promote ${{ROLLOUT_NAME}} -n rolloutapp
