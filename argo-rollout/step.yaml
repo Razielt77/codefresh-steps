@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  name: razielt77_github/argocd-rollout
+  name: razielt77_github/argo-rollout
   version: 0.0.1
   isPublic: true
   description: This pipeline plugin can promote Argo rollouts
@@ -24,6 +24,10 @@ metadata:
           arguments:
             K8S_CONTEXT: '${{K8S_CONTEXT}}'
             ROLLOUT_NAME: '${{ROLLOUT_NAME}}'
+            ARGOCD_USERNAME: 'admin'
+            ARGOCD_PWD: '${{ARGOCD_PWD}}'
+            ARGOCD_SERVER: '${{ARGOCD_SERVER}}'
+            ARGOCD_APP_NAME: '${{ARGOCD_APP_NAME}}'
   latest: true
 spec:
   arguments: |
@@ -35,7 +39,10 @@ spec:
       "patterns": [],
       "required": [
           "K8S_CONTEXT",
-          "ROLLOUT_NAME"
+          "ROLLOUT_NAME",
+          "ARGOCD_PWD",
+          "ARGOCD_SERVER",
+          "ARGOCD_APP_NAME"
       ],
       "properties": {
           "K8S_CONTEXT": {
@@ -45,14 +52,33 @@ spec:
           "ROLLOUT_NAME": {
               "type": "string",
               "description": "The name of the rollout to be promoted."
+          },
+          "ARGOCD_USERNAME": {
+              "type": "string",
+              "description": "The username to use when login to argocd server. Default is admin.",
+              "default": "admin"
+          },
+          "ARGOCD_PWD": {
+              "type": "string",
+              "description": "The pwd to use when login to argocd server."
+          },
+          "ARGOCD_SERVER": {
+              "type": "string",
+              "description": "Argocd server IP/URL"
+          },
+          "ARGOCD_APP_NAME": {
+              "type": "string",
+              "description": "The argocd application that will be synced"
           }
       }
     }
   steps:
     runArgoCd:
       title: "Run ArgoCD"
-      image: "razielt/argo-rollout:1.0"
+      image: "razielt/argo-rollout:2.0"
       commands:
+        - argocd login ${{ARGOCD_SERVER}} --insecure --username ${{ARGOCD_USERNAME}} --password ${{ARGOCD_PWD}}
         - kubectl config get-contexts
         - kubectl config use-context ${{K8S_CONTEXT}}
         - kubectl argo rollouts promote ${{ROLLOUT_NAME}} -n rolloutapp
+        - argocd app wait ${{ARGOCD_APP_NAME}}
