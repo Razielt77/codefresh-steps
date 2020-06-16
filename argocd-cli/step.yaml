@@ -63,10 +63,15 @@ spec:
               "description": "Specify whether to trigger an ArgoCD sync",
               "default": true
           },
-          "ARGOCD_WAIT": {
+          "ARGOCD_WAIT_HEALTHY": {
               "type": "boolean",
-              "description": "Specify whether to wait for ArgoCD server (when doing canary this might wait till the whole rollout is complete)",
-              "default": true
+              "description": "Specify whether to wait for sync to be completed (in canary consider wait for suspended status)",
+              "default": false
+          },
+          "ARGOCD_WAIT_FOR_SUSPEND": {
+              "type": "boolean",
+              "description": "Specify whether to wait for application suspended status",
+              "default": false
           }
       }
     }
@@ -76,8 +81,12 @@ spec:
       image: "docker.io/razielt/argocd-cli:2.0"
       environment:
         - ARGOCD_SYNC=${{ARGOCD_SYNC}}
-        - ARGOCD_WAIT=${{ARGOCD_WAIT}}
+        - ARGOCD_WAIT_HEALTHY=${{ARGOCD_WAIT_HEALTHY}}
+        - ARGOCD_WAIT_FOR_SUSPEND=${{ARGOCD_WAIT_FOR_SUSPEND}}
       commands:
         - argocd login ${{ARGOCD_SERVER}} --insecure --username ${{ARGOCD_USERNAME}} --password ${{ARGOCD_PWD}}
+        - echo "${{ARGOCD_SERVER}}/${{ARGOCD_APP_NAME}}"
+        - cf_export runArgoCd_CF_OUTPUT_URL="${{ARGOCD_SERVER}}/${{ARGOCD_APP_NAME}}"
         - if $ARGOCD_SYNC; then argocd app sync ${{ARGOCD_APP_NAME}}; fi
-        - if $ARGOCD_WAIT; then argocd app wait ${{ARGOCD_APP_NAME}}; fi
+        - if $ARGOCD_WAIT_HEALTHY; then argocd app wait ${{ARGOCD_APP_NAME}}; fi
+        - if $ARGOCD_WAIT_FOR_SUSPEND; then argocd app wait ${{ARGOCD_APP_NAME}} --suspended; fi
