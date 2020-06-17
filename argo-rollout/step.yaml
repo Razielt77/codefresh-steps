@@ -73,11 +73,14 @@ spec:
       }
     }
   steps:
+
     runArgoCd:
       title: "Run ArgoCD"
       image: "razielt/argo-rollout:2.0"
       commands:
         - argocd login ${{ARGOCD_SERVER}} --insecure --username ${{ARGOCD_USERNAME}} --password ${{ARGOCD_PWD}}
+        - echo "http://${{ARGOCD_SERVER}}/applications/${{ARGOCD_APP_NAME}}"
+        - cf_export runArgoCd_CF_OUTPUT_URL="http://${{ARGOCD_SERVER}}/applications/${{ARGOCD_APP_NAME}}"
         - kubectl config get-contexts
         - kubectl config use-context ${{K8S_CONTEXT}}
         - kubectl argo rollouts promote ${{ROLLOUT_NAME}} -n rolloutapp
