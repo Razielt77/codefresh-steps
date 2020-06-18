@@ -85,8 +85,8 @@ spec:
         - ARGOCD_WAIT_FOR_SUSPEND=${{ARGOCD_WAIT_FOR_SUSPEND}}
       commands:
         - argocd login ${{ARGOCD_SERVER}} --insecure --username ${{ARGOCD_USERNAME}} --password ${{ARGOCD_PWD}}
-        - echo "${{ARGOCD_SERVER}}/${{ARGOCD_APP_NAME}}"
-        - cf_export runArgoCd_CF_OUTPUT_URL="${{ARGOCD_SERVER}}/${{ARGOCD_APP_NAME}}"
+        - echo "http://${{ARGOCD_SERVER}}/applications/${{ARGOCD_APP_NAME}}"
+        - cf_export runArgoCd_CF_OUTPUT_URL="http://${{ARGOCD_SERVER}}/applications/${{ARGOCD_APP_NAME}}"
         - if $ARGOCD_SYNC; then argocd app sync ${{ARGOCD_APP_NAME}}; fi
         - if $ARGOCD_WAIT_HEALTHY; then argocd app wait ${{ARGOCD_APP_NAME}}; fi
         - if $ARGOCD_WAIT_FOR_SUSPEND; then argocd app wait ${{ARGOCD_APP_NAME}} --suspended; fi
