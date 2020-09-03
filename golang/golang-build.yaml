@@ -1,10 +1,10 @@
 version: '1.0'
 kind: step-type
 metadata:
-  name: razielt77_github/golang-test
+  name: razielt77_github/golang-build
   version: 0.0.1
   isPublic: true
-  description: This pipeline plugin can be used to run golang test on your clone repo
+  description: This pipeline plugin can be used to run go build on your clone repo
   sources:
     - 'https://github.com/Razielt77/codefresh-steps/tree/master/golang'
   stage: incubating
@@ -24,7 +24,7 @@ metadata:
           arguments:
             WORKING_DIRECTORY: '${{clone}}'
             REPO_NAME: "${{CF_REPO_NAME}}"
-            COMMAND: "go test -cover"
+            COMMAND: "go build *go"
   latest: true
 spec:
   arguments: |
@@ -38,13 +38,13 @@ spec:
       "properties": {
           "WORKING_DIRECTORY": {
               "type": "string",
-              "description": "The directory in which to run the command. Defaule is the git clone directory '${{clone}}'",
+              "description": "The directory to which the repo was cloned. Defaule is the git clone directory '${{clone}}'",
               "default": "${{clone}}"
           },
           "COMMAND": {
               "type": "string",
-              "description": "The test command to run. default is 'make test'",
-              "default": "make test"
+              "description": "The test command to run. default is 'make build'",
+              "default": "make build"
           },
           "REPO_NAME": {
               "type": "string",
@@ -59,7 +59,5 @@ spec:
       image: "golang:1.15.1"
       working_directory: ${{WORKING_DIRECTORY}}
       commands:
-        - echo ${{REPO_NAME}}
         - cd ${{REPO_NAME}}
-        - ls
         - ${{COMMAND}}
