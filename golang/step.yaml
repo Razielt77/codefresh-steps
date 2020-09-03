@@ -1,7 +1,7 @@
 version: '1.0'
 kind: step-type
 metadata:
-  name: razielt77_github/go-test
+  name: razielt77_github/golang-test
   version: 0.0.1
   isPublic: true
   description: This pipeline plugin can be used to run golang test on your clone repo
@@ -12,7 +12,7 @@ metadata:
     - testing
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/Razielt77/golang/master/golang-gopher.svg
+    url: https://raw.githubusercontent.com/Razielt77/codefresh-steps/master/golang/golang-gopher.svg
     background: "#F4F4F4"
   maintainers:
     - name: Raziel Tabib
@@ -20,10 +20,11 @@ metadata:
     - workflow:
         unit_test:
           title: Update gitops repo with changes to be deployed
-          type: razielt77_github/go-test
+          type: razielt77_github/golang-test
           arguments:
-            DIRECTORY: '${{clone}}'
-            COMMAND: 'go test -cover'
+            WORKING_DIRECTORY: '${{clone}}'
+            REPO_NAME: "${{CF_REPO_NAME}}"
+            COMMAND: "go test -cover"
   latest: true
 spec:
   arguments: |
@@ -35,7 +36,7 @@ spec:
       "patterns": [],
       "required": [],
       "properties": {
-          "DIRECTORY": {
+          "WORKING_DIRECTORY": {
               "type": "string",
               "description": "The directory in which to run the command. Defaule is the git clone directory '${{clone}}'",
               "default": "${{clone}}"
@@ -44,6 +45,11 @@ spec:
               "type": "string",
               "description": "The test command to run. default is 'make test'",
               "default": "make test"
+          },
+          "REPO_NAME": {
+              "type": "string",
+              "description": "The repo name",
+              "default": "${{CF_REPO_NAME}}"
           }
       }
     }
@@ -51,6 +57,9 @@ spec:
     runUnitTests:
       title: "Run test"
       image: "golang:1.15.1"
-      working_directory: ${{DIRECTORY}}
+      working_directory: ${{WORKING_DIRECTORY}}
       commands:
+        - echo ${{REPO_NAME}}
+        - cd ${{REPO_NAME}}
+        - ls
         - ${{COMMAND}}
