@@ -12,7 +12,7 @@ metadata:
     - deployment
   icon:
     type: svg
-    url: https://raw.githubusercontent.com/Razielt77/kyml/master/kyml.svg
+    url: https://raw.githubusercontent.com/Razielt77/codefresh-steps/master/kyml/kyml.svg
     background: "#F4F4F4"
   maintainers:
     - name: Raziel Tabib
